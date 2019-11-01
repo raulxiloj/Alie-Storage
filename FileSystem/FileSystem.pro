@@ -23,7 +23,8 @@ SOURCES += \
     nodomount.cpp \
     parser.cpp \
     scanner.cpp \
-    reporte.cpp
+    reporte.cpp \
+    tcp_client.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -40,7 +41,8 @@ HEADERS += \
     nodomount.h \
     parser.h \
     scanner.h \
-    reporte.h
+    reporte.h \
+    tcp_client.h
 
 DISTFILES += \
     Lexico.l \

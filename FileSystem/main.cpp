@@ -6,6 +6,8 @@
 #include <QFileInfo>
 #include <thread>         // std::this_thread::sleep_for
 #include <chrono>         // std::chrono::seconds
+//Connection
+#include "tcp_client.h"
 
 #include "scanner.h"
 #include "parser.h"
@@ -102,6 +104,21 @@ int main()
         leerComando(input);
         memset(input,0,400);
     }
+}
+
+void syncroniceData(){
+    tcp_client c;
+    string host = "127.0.0.1";
+    //connect to host
+    c.conn(host , 3000);
+
+    //send some data
+    c.send_data("GET /registro HTTP/1.1\r\n\r\n");
+
+    //receive and echo reply
+    cout<<"----------------------------\n\n";
+    cout<<c.receive(1024);
+    cout<<"\n\n----------------------------\n\n";
 }
 
 /*
@@ -5067,4 +5084,10 @@ int buscarContentLibre(FILE* stream,int numInodo,InodoTable &inodo,BloqueCarpeta
     }
 
     return libre;
+}
+
+/* ----- conexion ----- */
+int conexion(){
+
+    return 0;
 }
