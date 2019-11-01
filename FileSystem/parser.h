@@ -120,7 +120,8 @@ extern int yydebug;
     fileRep = 330,
     ls = 331,
     password = 332,
-    directorio = 333
+    directorio = 333,
+    syncronice = 334
   };
 #endif
 
@@ -135,7 +136,7 @@ union YYSTYPE
         class Nodo *nodito;
     
 
-#line 139 "parser.h" /* yacc.c:1909  */
+#line 140 "parser.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

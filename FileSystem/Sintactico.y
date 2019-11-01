@@ -101,6 +101,7 @@
 %token <text> ls
 %token <text> password
 %token <text> directorio
+%token <text> syncronice
 
 /*----------Not terminals------------*/
 %type <nodito> INIT
@@ -150,6 +151,8 @@
 %type <nodito> PARAM_CHGRP
 %type <nodito> RECOVERY
 %type <nodito> LOSS
+%type <nodito> SYNCRO
+
 %start INIT
 
 %%
@@ -235,7 +238,7 @@ COMANDO: mkdisk MKDISK {
          | pausa { $$ = new Nodo("PAUSE",""); }
          | RECOVERY { $$ = $1; };
          | LOSS { $$ = $1; }
-         ;
+         | SYNCRO { $$ = $1; };
 
 
 
@@ -625,3 +628,9 @@ LOSS: loss id igual identificador{
                                     Nodo *n = new Nodo("id",$4);
                                     $$->add(*n);
                                  };
+
+SYNCRO: syncronice id igual identificador{
+                                          $$ = new Nodo("SYNCRONICE","");
+                                          Nodo *n = new Nodo("id",$4);
+                                          $$->add(*n);
+                                         };

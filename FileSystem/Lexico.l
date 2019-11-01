@@ -96,9 +96,9 @@ INITIAL
     "sb"         { return sb; }
     "file"       { return fileRep; }
     "ls"         { return ls; }
+    "syncronice" { return syncronice; }
 
-
-    "="         { return igual; }
+    "="          { return igual; }
 
     {entero}    {strcpy(yylval.text, yytext); return num;}
     {caracter}  {strcpy(yylval.text, yytext); return caracter;}
