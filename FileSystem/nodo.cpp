@@ -67,6 +67,7 @@ int Nodo::getTipo()
     if(this->tipo == "tree")       return 55;
     if(this->tipo == "sb")         return 56;
     if(this->tipo == "ruta")       return 57;
+    if(this->tipo == "SYNCRONICE") return 58;
     return 0;
 }
 
