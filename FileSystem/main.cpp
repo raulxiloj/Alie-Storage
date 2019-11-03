@@ -9,17 +9,22 @@
 //Connection
 #include "tcp_client.h"
 
+
+#include <cstdlib>
+#include <vector>
+
 #include "scanner.h"
 #include "parser.h"
 #include "graficador.h"
 #include "mainheader.h"
-#include "disco.h"
 #include "reporte.h"
 
 extern int yyparse();
 extern Nodo *raiz; // Raiz del arbol
 
 using namespace std;
+
+QList<Data> data;
 
 /*
  * Enumeracion que lista todos los comandos y sus parametros reconocidos por
@@ -86,6 +91,7 @@ enum Choice
     TREE = 55,
     SB = 56,
     RUTA = 57,
+    SYNCRONICE = 58
 };
 
 /*  FUNCION PRINCIPAL */
@@ -104,21 +110,51 @@ int main()
         leerComando(input);
         memset(input,0,400);
     }
+
 }
 
-void syncroniceData(){
+void syncroniceData(QString id){
+    NodoMount *n = lista->getNodo(id);
+    if(n != nullptr){
+        int index = disco.buscarParticion_P_E(n->direccion,n->nombre);
+        int inicioSuper = 0;
+        FILE *fp = fopen(n->direccion.toStdString().c_str(),"rb+");
+        if(index != -1){//Primaria/Extendida
+            MBR masterboot;
+            fread(&masterboot,sizeof(MBR),1,fp);
+            fseek(fp,masterboot.mbr_partition[index].part_start,SEEK_SET);
+            inicioSuper = masterboot.mbr_partition[index].part_start;
+            QList<Usuario> usuarios = getUsuarios(n->direccion,inicioSuper);
+            for (int i = 0; i < usuarios.count(); i++) {
+                cout << usuarios.at(i).username << endl;
+            }
+            QList<Data> aux = getCarpetasArchivos(fp,inicioSuper,1,0);
+            for (int j=0; j < aux.count(); j++) {
+                cout << data.at(j).nombre.toStdString() << " Padre: " << data.at(j).padre  << " Actual: "<< data.at(j).actual << endl;
+            }
+            data.clear();
+        }else{//Logica
+
+        }
+    }else
+        cout << "ERROR: No se encuentra ninguna particion montada con ese id" << endl;
+
+    /*
     tcp_client c;
     string host = "127.0.0.1";
     //connect to host
     c.conn(host , 3000);
-
     //send some data
-    c.send_data("GET /registro HTTP/1.1\r\n\r\n");
-
+    //c.send_data("GET /registro HTTP/1.1\r\n\r\n");
+    string data = "{\"username\":\"saxl\",\"clave\":\"123\"}";
+    int length = static_cast<int>(data.length());
+    cout << length << endl;
+    c.send_data("POST /registro HTTP/1.1\r\nHost: 127.0.0.1:3000\r\nContent-Type: application/json\r\nContent-Length: "+to_string(length)+"\r\n\r\n"+data);
     //receive and echo reply
     cout<<"----------------------------\n\n";
     cout<<c.receive(1024);
     cout<<"\n\n----------------------------\n\n";
+    */
 }
 
 /*
@@ -309,6 +345,12 @@ void reconocerComando(Nodo *raiz)
     case LOSS:
     {
         systemLoss(raiz->hijos.at(0).valor);
+    }
+        break;
+    case SYNCRONICE:
+    {
+        //cout << "Sincronizando informacion con la base de datos..." << endl;
+        syncroniceData(raiz->hijos.at(0).valor);
     }
         break;
     default: printf("ERROR no se reconoce el comando");
@@ -5023,12 +5065,10 @@ InodoTable crearInodo(int size,char type,int perm){
 /* Funcion para crear un bloque carpeta vacia */
 BloqueCarpeta crearBloqueCarpeta(){
     BloqueCarpeta carpeta;
-
     for(int i = 0; i < 4; i++){
         strcpy(carpeta.b_content[i].b_name,"");
         carpeta.b_content[i].b_inodo = -1;
     }
-
     return carpeta;
 }
 
@@ -5086,8 +5126,147 @@ int buscarContentLibre(FILE* stream,int numInodo,InodoTable &inodo,BloqueCarpeta
     return libre;
 }
 
-/* ----- conexion ----- */
-int conexion(){
+/* ----- SYNCRONICE DATA ----- */
+QList<Usuario> getUsuarios(QString direccion,int inicioSuper){
+    QList<Usuario> users;
 
+    FILE *fp = fopen(direccion.toStdString().c_str(),"rb+");
+
+    char cadena[400] = "\0";
+    SuperBloque super;
+    InodoTable inodo;
+
+    fseek(fp,inicioSuper,SEEK_SET);
+    fread(&super,sizeof(SuperBloque),1,fp);
+    //Nos posicionamos en el inodo del archivo users.txt
+    fseek(fp,super.s_inode_start + static_cast<int>(sizeof(InodoTable)), SEEK_SET);
+    fread(&inodo,sizeof(InodoTable),1,fp);
+
+    for(int i = 0; i < 15; i++){
+        if(inodo.i_block[i] != -1){
+            BloqueArchivo archivo;
+            fseek(fp,super.s_block_start,SEEK_SET);
+            for(int j = 0; j <= inodo.i_block[i]; j++){
+                fread(&archivo,sizeof(BloqueArchivo),1,fp);
+            }
+            strcat(cadena,archivo.b_content);
+        }
+    }
+
+    fclose(fp);
+
+    char *end_str;
+    char *token = strtok_r(cadena,"\n",&end_str);
+    while(token != nullptr){
+        char id[2];
+        char tipo[2];
+        char user[12];
+        char grupo[12];
+        char pass[12];
+        char *end_token;
+        char *token2 = strtok_r(token,",",&end_token);
+        strcpy(id,token2);
+        if(strcmp(id,"0") != 0){//Verificar que no sea un U/G eliminado
+            token2 = strtok_r(nullptr,",",&end_token);
+            strcpy(tipo,token2);
+            if(strcmp(tipo,"U") == 0){
+                token2 = strtok_r(nullptr,",",&end_token);
+                strcpy(grupo,token2);
+                token2 = strtok_r(nullptr,",",&end_token);
+                strcpy(user,token2);
+                token2 = strtok_r(nullptr,",",&end_token);
+                strcpy(pass,token2);
+                int idAux = atoi(id);
+                Usuario usuario;
+                usuario.id_usr = idAux;
+                strcpy(usuario.username,user);
+                strcpy(usuario.password,pass);
+                users.append(usuario);
+            }
+        }
+        token = strtok_r(nullptr,"\n",&end_str);
+    }
+
+    return users;
+}
+
+QList<Data> getCarpetasArchivos(FILE* stream, int inicioSuper, int id, int num){
+    SuperBloque super;
+    InodoTable inodo;
+    BloqueCarpeta c;
+    //BloqueApuntadores apuntador;
+
+    fseek(stream,inicioSuper,SEEK_SET);
+    fread(&super,sizeof(SuperBloque),1,stream);
+    int numInodo;
+    if(num == 0)
+        numInodo = super.s_inode_start;
+    else
+        numInodo = num;
+
+    fseek(stream,numInodo,SEEK_SET);
+    fread(&inodo,sizeof(InodoTable),1,stream);
+    if(inodo.i_type == '0'){
+        for(int i = 0; i < 12; i++){
+            if(inodo.i_block[i] != -1){
+                int byteBloque = getByteIB(stream,inodo.i_block[i],'2',inicioSuper);
+                fseek(stream,byteBloque,SEEK_SET);
+                fread(&c,sizeof(BloqueCarpeta),1,stream);
+                for (int j = 0; j < 4; j++) {
+                    if((strcmp(c.b_content[j].b_name,".")!=0 && strcmp(c.b_content[j].b_name,"..")!=0) && c.b_content[j].b_inodo != -1){
+                        char aux = getType(stream,c.b_content[j].b_inodo,inicioSuper);
+                        int p = getPadre(stream,c.b_content[j].b_inodo,inicioSuper);
+                        if(aux == 'C'){
+                            Data *d = new Data(aux,p,c.b_content[j].b_inodo,c.b_content[j].b_name);
+                            data.append(*d);
+                            getCarpetasArchivos(stream,inicioSuper,id,getByteIB(stream,c.b_content[j].b_inodo,'1',inicioSuper));
+                        }else{
+
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
+    return data;
+}
+
+char getType(FILE *stream, int pos, int inicioSuper){
+    SuperBloque super;
+    InodoTable inodo;
+    fseek(stream,inicioSuper,SEEK_SET);
+    fread(&super,sizeof(SuperBloque),1,stream);
+    fseek(stream,super.s_inode_start + static_cast<int>(sizeof(InodoTable))*pos,SEEK_SET);
+    fread(&inodo,sizeof(InodoTable),1,stream);
+    if(inodo.i_type == '0')
+        return 'C';
+    else
+        return 'A';
+}
+
+int getPadre(FILE *stream, int pos, int inicioSuper){
+    SuperBloque super;
+    InodoTable inodo;
+    BloqueCarpeta carpeta;
+    fseek(stream,inicioSuper,SEEK_SET);
+    fread(&super,sizeof(SuperBloque),1,stream);
+    fseek(stream,super.s_inode_start + static_cast<int>(sizeof(InodoTable))*pos,SEEK_SET);
+    fread(&inodo,sizeof(InodoTable),1,stream);
+    fseek(stream,getByteIB(stream,inodo.i_block[0],'2',inicioSuper),SEEK_SET);
+    fread(&carpeta,sizeof(BloqueCarpeta),1,stream);
+    return carpeta.b_content[1].b_inodo;
+}
+
+int getByteIB(FILE *stream,int pos, char tipo, int inicioSuper){
+    SuperBloque super;
+    fseek(stream,inicioSuper,SEEK_SET);
+    fread(&super,sizeof(SuperBloque),1,stream);
+    if(tipo == '1'){
+        return (super.s_inode_start + static_cast<int>(sizeof(InodoTable))*pos);
+    }else if(tipo == '2')
+        return (super.s_block_start + static_cast<int>(sizeof(BloqueCarpeta))*pos);
     return 0;
 }
+

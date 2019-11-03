@@ -6,6 +6,7 @@
 #include "structs.h"
 #include "listamount.h"
 #include "disco.h"
+#include "data.h"
 
 /*Variables globales*/
 ListaMount *lista = new ListaMount();
@@ -84,5 +85,10 @@ bool isNumber(string);
 InodoTable crearInodo(int,char,int);
 BloqueCarpeta crearBloqueCarpeta();
 int buscarContentLibre(FILE*,int,InodoTable&,BloqueCarpeta&,BloqueApuntadores&,int&,int&,int&);
+QList<Usuario> getUsuarios(QString,int);
+QList<Data> getCarpetasArchivos(FILE*,int,int,int);
+int getByteIB(FILE*,int,char,int);
+int getPadre(FILE*,int,int);
+char getType(FILE *stream, int pos, int inicioSuper);
 
 #endif // MAINHEADER_H

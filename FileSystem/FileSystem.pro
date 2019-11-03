@@ -24,7 +24,8 @@ SOURCES += \
     parser.cpp \
     scanner.cpp \
     reporte.cpp \
-    tcp_client.cpp
+    tcp_client.cpp \
+    data.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -42,7 +43,8 @@ HEADERS += \
     parser.h \
     scanner.h \
     reporte.h \
-    tcp_client.h
+    tcp_client.h \
+    data.h
 
 DISTFILES += \
     Lexico.l \
