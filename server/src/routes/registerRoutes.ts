@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { registerController } from '../controllers/registerController'
 
 class RegisterRoutes{
     
@@ -9,7 +10,11 @@ class RegisterRoutes{
     }
     
     config(): void{
-        this.router.get('/',(req,res)=> res.send('Games'))
+        this.router.get('/',registerController.list);
+        this.router.get('/:id',registerController.getOne);
+        this.router.post('/',registerController.create);
+        this.router.put('/:id',registerController.update)
+        this.router.delete('/:id',registerController.delete);
     }
 
 }
