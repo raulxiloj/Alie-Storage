@@ -2,6 +2,8 @@ import express, { Application } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 
+const database = require('./routes/database');
+
 import indexRoutes from './routes/indexRoutes';
 import registerRoutes from './routes/registerRoutes';
 
@@ -29,6 +31,7 @@ class Server{
     }
 
     start(): void{
+        database.initialize();
         this.app.listen(this.app.get('port'), () => {
             console.log('Server on port ', this.app.get('port'));
         });
