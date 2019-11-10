@@ -1,0 +1,36 @@
+<div class="container pt-5">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <br>
+            <img src="assets/img/check.png" width='150' height='150' alt="asd">
+            <h2> Thank you for your registration! </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 ">
+            <h3>We have received your registration information and are working to set up your account. 
+                To confirm your data we sent you an email with a temporary password. Please fill the next fields with your username and that password.
+            </h3>
+        </div>
+    </div>
+    <div class="row pt-5">
+        <div class="col-md-4 offset-4">
+            <div class="card">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group">
+                            <input type="text" name="userName" placeholder="Username" [(ngModel)]="username" class="form-control" autofocus>
+                        </div>
+                        <div class="form-group">
+                                <input type="password" name="password" placeholder="Password" [(ngModel)]="password" class="form-control">
+                        </div>
+                        <button class="btn btn-success btn-block" (click)="activateUser()">
+                            Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
