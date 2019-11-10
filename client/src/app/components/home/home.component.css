@@ -1,0 +1,17 @@
+p {
+    font-size: 20px;
+    font-weight: 450;
+}
+
+h2{
+    font-size: 35px;
+}
+
+.cont{
+    background-color: #171717;
+}
+
+.image{
+    float: right;
+    padding-top: 30px;
+}
