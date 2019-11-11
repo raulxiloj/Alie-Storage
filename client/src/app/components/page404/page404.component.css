@@ -1,0 +1,56 @@
+hr.light {
+  border-color: white;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: normal;
+  letter-spacing: 1px;
+  color: #fff;
+}
+p {
+  font-size: 20px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+h1.head{
+  font-size: 250px;
+  font-weight: 900;
+  letter-spacing: 25px;
+  margin: 10px 0 0 0;
+}
+h1.head span {
+  position: relative;
+  display: inline-block;
+}
+h1.head span:before, h1.head span:after{
+  position: absolute;
+  top:50%;
+  width: 50%;
+  height: 1px;
+  background: #fff;
+  content: '';
+}
+h1.head span:before{
+  left: -55%;
+}
+h1.head span:after{
+  right: -55%;
+}
+.btn-outline{
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 12px 40px;
+  border-radius: 25px;
+  margin-top: 25px;
+  display: inline-block;
+  font-weight: 600;
+}
+
+
