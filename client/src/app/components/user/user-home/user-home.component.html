@@ -1,0 +1,31 @@
+<div class="row py-5 px-4">
+    <div class="col-xl-5 col-md-8 col-sm-10 mx-auto">
+        <br>
+        <br>
+        <!-- Profile widget -->
+        <div class="bg-white shadow rounded overflow-hidden">
+            <div class="px-4 pt-0 pb-4 bg-dark">
+                <div class="media align-items-end profile-header">
+                    <div class="profile mr-3"><img src="https://es.zenit.org/wp-content/uploads/2018/05/no-image-icon.png" alt="..." width="130" class="rounded mb-2 img-thumbnail"><a routerLink="/user/profile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
+                        <div class="media-body mb-5 text-white">
+                            <h4 class="mt-0 mb-0">{{userData.firstname}} {{userData.lastname}}</h4>
+                            <p class="small mb-4"> <i class="fa fa-address-card" aria-hidden="true"></i> {{userData.username}}</p>
+                        </div>
+                </div>
+            </div>
+            
+            <div class="py-4 px-4">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="mb-0">Disco</h5><a href="#" class="btn btn-link text-muted">disk name</a>
+                </div>
+                <!-- DIRECTORY -->
+                <div class="row text-center">
+                    <div class="col-lg-6 mb-2 pr-lg-1"><img src="assets/img/partition.png" alt=""  width="240"></div>
+                    <div class="col-lg-6 mb-2 pl-lg-1"><img src="assets/img/partition.png" alt="" class="img-fluid rounded shadow-sm" width="240"></div>
+                </div>
+
+            </div>
+        </div><!-- End profile widget -->
+    </div>
+</div>
+
