@@ -19,10 +19,10 @@
                 <div class="card-body">
                     <form>
                         <div class="form-group">
-                            <input type="text" name="userName" placeholder="Username" [(ngModel)]="username" class="form-control" autofocus>
+                            <input type="text" name="userName" placeholder="Username" [(ngModel)]="user.username" class="form-control" autofocus>
                         </div>
                         <div class="form-group">
-                                <input type="password" name="password" placeholder="Password" [(ngModel)]="password" class="form-control">
+                                <input type="password" name="password" placeholder="Password" [(ngModel)]="user.clave" class="form-control">
                         </div>
                         <button class="btn btn-success btn-block" (click)="activateUser()">
                             Submit

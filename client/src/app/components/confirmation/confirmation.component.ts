@@ -22,25 +22,15 @@ export class ConfirmationComponent implements OnInit {
   }
 
   activateUser(){
-    this.dataApiService.signIn(this.username)
+    this.dataApiService.activateUser(this.user)
     .subscribe(
-      res =>{
-        this.user = res;
-        if(this.user.CLAVE == this.password){
-          this.dataApiService.activateUser(this.username)
-          .subscribe(
-             res =>  {
-              this.toastr.Success("Succesfully activated");
-              this.router.navigate(['/']);
-            },
-            err => {
-              console.log(err.message);
-            }
-          );
-        }else{
-          console.log("incorrect password");
-        }
-        
+      res => {
+        console.log(res);
+        this.toastr.Success("Succesfully activated");
+        this.router.navigate(['/']);
+      },
+      err => {
+        console.log(err.message);
       }
     )
   }
