@@ -1,0 +1,16 @@
+# Installation
+> `npm install --save @types/multer`
+
+# Summary
+This package contains type definitions for multer (https://github.com/expressjs/multer).
+
+# Details
+Files were exported from https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/multer
+
+Additional Details
+ * Last updated: Wed, 25 Sep 2019 18:34:17 GMT
+ * Dependencies: @types/express
+ * Global values: none
+
+# Credits
+These definitions were written by jt000 <https://github.com/jt000>, vilicvane <https://vilic.github.io/>, David Broder-Rodgers <https://github.com/DavidBR-SW>, Michael Ledin <https://github.com/mxl>, HyunSeob Lee <https://github.com/hyunseob>, and Pierre Tchuente <https://github.com/PierreTchuente>.
