@@ -1,0 +1,8 @@
+<div mat-dialog-content>
+    <mat-form-field>
+        <input matInput placeholder={{data.message}} [(ngModel)]="data.name">
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="data.name">Ok</button>
+</div>
