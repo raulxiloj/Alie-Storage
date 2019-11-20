@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataApiService } from 'src/app/services/data-api.service';
 import { Location } from '@angular/common';
+import { ToastrService } from 'src/app/services/toastr.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -11,26 +12,40 @@ import { Location } from '@angular/common';
 export class LoginComponent implements OnInit {
 
   user:any ={};
+  response: any = {};
 
-  constructor(private dataApi: DataApiService, private router: Router, private location: Location) { }
+  constructor(private userService: UserService, private router: Router, private location: Location, private toastr: ToastrService) { }
 
   ngOnInit() {
 
   }
 
   login(){
-    this.dataApi.signIn(this.user)
+    this.userService.signIn(this.user)
     .subscribe(
       res => {
-        this.router.navigate(['/user/Home']);
-        this.location.replaceState("/user/Home");
-        location.reload();
+        this.response = res;
+        console.log(this.response);
+        if(this.response.tipo == 1){
+          this.router.navigate(['/user/Home']);
+          this.location.replaceState("/user/Home");
+          location.reload();
+        }else{
+          this.router.navigate(['/admin/editHome']);
+          this.location.replaceState("/admin/editHome");
+          location.reload();
+        }
+      },
+      err => {
+        if(err.status == 500){
+          this.toastr.Error("Inactive user","Please check your email");
+        }else if(err.status == 501){
+          this.toastr.Error("Incorrect password","Try again");
+        }else if(err.status == 404){
+          this.toastr.Error("Unexisting user");
+        }
       }
     )
   }
-
-
-
-  
 
 }
