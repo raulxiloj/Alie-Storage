@@ -7,3 +7,13 @@
     color: cornflowerblue;
     margin-right: 5px;
   }
+
+  .folder-files{
+    background-color: #DCEEF6;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  .fileSystem{
+    padding-top: 8rem;
+    margin-left: 2rem;
+  }

@@ -1,14 +1,24 @@
 <div class="container">
-    <div class="row no-gutters py-5">
-            <div class="col-md-4">
-                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-                            <button mat-icon-button (click)="selectNode(node)"></button>
-                                <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
+    <div class="row pt-5">
+        <div class="col-md-2">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-info" (click)="createFolder()"><mat-icon>create_new_folder</mat-icon></button>
+                <button type="button" class="btn btn-info" (click)="createFile()"><i class="fas fa-file"></i></button>
+                <button type="button" class="btn btn-info" (click)="rename()"><i class="fas fa-font"></i></button>
+                <button type="button" class="btn btn-info" (click)="delete()"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+                        <button mat-icon-button (click)="selectNode(node)"></button>
+                            <mat-icon class="type-icon" [attr.aria-label]="node.type + 'icon'">
                                 {{ node.type ==='file' ? 'description' : 'folder' }}
-                                </mat-icon>
-                                {{node.name.substring(0,node.name.indexOf("-"))}}
-                        </mat-tree-node>
+                            </mat-icon>
+                            {{node.name.substring(0,node.name.indexOf("-"))}}
+                    </mat-tree-node>
             
                         <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
                             <button mat-icon-button matTreeNodeToggle
@@ -24,20 +34,50 @@
                         </mat-tree-node>
                     </mat-tree>
             </div>
-            <div class="col-md-2">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-info" (click)="createFolder()"><mat-icon>create_new_folder</mat-icon></button>
-                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal"><i class="fas fa-file"></i></button>
-                            <button type="button" class="btn btn-info"><i class="fas fa-font"></i></button>
-                    </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        temp
-                    </div>
+    </div>
+    <div class="row my-5 folder-files" *ngIf="folders!==null">
+        <div class="col-md-2 py-4" *ngFor="let f of folders">
+            <div class="text-center"  *ngIf="f.type==='folder'; else elseBlock">
+                <div class="row justify-content-center">
+                    <i class="fas fa-folder fa-5x text-primary"></i>
+                </div>
+                <div class="row justify-content-center">
+                    <label >{{f.name}}</label>
                 </div>
             </div>
+            <ng-template #elseBlock>
+                <div class="row justify-content-center">
+                    <i class="fas fa-file fa-5x text-primary"></i>
+                </div>
+                <div class="row justify-content-center">
+                    <label>{{f.name}}</label>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <div class="row my-5 justify-content-center" *ngIf="file!==null">
+        <div class="col-4">
+            <div class="card">
+                <div class="card text-center" >
+                    <div class="card-header">
+                        {{file.name}}
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <textarea class="form-control" name="description" rows="4" placeholder="Description" [(ngModel)]="contentFile"></textarea>
+                        </div>
+                        <div class="text-right ml-2">
+                            <button class="btn btn-outline-info" (click)="saveContent()">
+                                Save
+                            </button>
+                            <button class="btn btn-outline-info" (click)="download()">
+                                Download
+                            </button>
+                        </div>
+                    </div>    
+                 </div>
+            </div>
+        </div>
     </div>
 </div>
 

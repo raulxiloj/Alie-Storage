@@ -7,6 +7,9 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { ToastrService } from 'src/app/services/toastr.service';
 import { MatDialog } from '@angular/material'
 import { ModComponent } from 'src/app/components/modal/mod/mod.component'
+import * as jsPDF from 'jspdf';
+
+
 
 /** File node data with nested structure. */
 export interface FileNode {
@@ -39,9 +42,12 @@ export class FileSystemComponent implements OnInit {
   /** The MatTreeFlatDataSource connects the control and flattener to provide data. */
   dataSource: MatTreeFlatDataSource<FileNode, TreeNode>;
 
-  current: string = "";
+  current: TreeNode = null;
   id: string;
   name: string;
+  folders: any = null;
+  file: any = null;
+  contentFile: string = null;
 
   constructor(private activateRoute: ActivatedRoute, private dataApi: DataApiService, private toastr: ToastrService, public dialog: MatDialog) {
     this.treeFlattener = new MatTreeFlattener(
@@ -98,7 +104,24 @@ export class FileSystemComponent implements OnInit {
   }
 
   selectNode(node: TreeNode){
-    this.current = node.name;
+    this.current = node;
+    let id:number = parseInt(this.current.name.substring(this.current.name.indexOf("-")+1,this.current.name.length));
+    if(this.current.type === 'folder'){
+      this.file = null;
+      this.dataApi.getFolder(id).subscribe(
+        res => {
+          this.folders = res;
+        }
+      );
+    }else{
+      this.folders = null;
+      this.dataApi.getFile(id).subscribe(
+        res => {
+          this.file = res;
+          this.contentFile = this.file.content;
+        }
+      )
+    }
   }
   
   expandParents(node: TreeNode) {
@@ -132,26 +155,36 @@ export class FileSystemComponent implements OnInit {
   parseData(data: any){
     const parsedData: any = [];
     for(let i = 0; i < data.length; i++){
-      let temp: any = {
-        name: data[i].name + "-" +data[i].id.toString(),
-        type: data[i].type,
+      if(data[i].name === "/"){
+        let temp: any = {
+          name: data[i].name + "-" +data[i].id.toString(),
+          type: data[i].type,
+        }
+        if(this.getChildren2(data[i].id,data,data[i].type).length != 0){
+          temp.children = this.getChildren2(data[i].id,data,data[i].type);
+        }
+        parsedData.push(temp);
       }
-      if(this.getChildren2(data[i].id,data).length != 0){
-        temp.children = this.getChildren2(data[i].id,data);
-      }
-      parsedData.push(temp);
+      
     }
     return parsedData;
   }
 
-  getChildren2(id: number,data){
+  getChildren2(id: number,data,type: string){
     const children: any = [];
-    for(let i = 0; i < data.length; i++){
-      if(data[i].father == id){
-        children.push({
-          name: data[i].name + "-" +data[i].id.toString(),
-          type: data[i].type
-        });
+    if(type === 'folder'){
+      for(let i = 0; i < data.length; i++){
+        if(data[i].father == id ){
+          let temp: any = {
+            name: data[i].name + "-" +data[i].id.toString(),
+            type: data[i].type
+          }
+          let aux = this.getChildren2(data[i].id,data, data[i].type);
+          if(aux.length > 0){
+            temp.children = aux;
+          }
+          children.push(temp);
+        }
       }
     }
       return children;
@@ -159,27 +192,158 @@ export class FileSystemComponent implements OnInit {
 
   //Create a new folder
   createFolder(){
-    if(this.current.length > 0){
-      let id:number = parseInt(this.current.substring(this.current.indexOf("-")+1,this.current.length));
+    if(this.current != null){
+      let id:number = parseInt(this.current.name.substring(this.current.name.indexOf("-")+1,this.current.name.length));
       const dialogRef = this.dialog.open(ModComponent,{ 
         width: '250px',
         data: {message:'Name of the folder:', name:this.name}
       });
       dialogRef.afterClosed().subscribe(result => {
-          console.log('The dialog was closed');
-          this.name = result;
-          console.log(this.name);
+          if(result !== undefined){
+            this.name = result;
+          const data: any = {
+            id: parseInt(this.id),
+            name: this.name,
+            father: id
+          }
+          this.dataApi.createFolder(data).subscribe(
+            res => {
+              this.toastr.Success("Folder created");
+              this.ngOnInit();
+            },
+            err => console.log(err)
+          );
+          }
         }
       )
-      //console.log(id);
-
     }else{
       this.toastr.Info("Please select a folder");
     }
   }
 
+  //Create a new file
   createFile(){
+    if(this.current != null){
+      let id:number = parseInt(this.current.name.substring(this.current.name.indexOf("-")+1,this.current.name.length));
+      const dialogRef = this.dialog.open(ModComponent,{ 
+        width: '250px',
+        data: {message:'Name of the file:', name:this.name}
+      });
+      dialogRef.afterClosed().subscribe(result => {
+          if(result !== undefined){
+            this.name = result;
+            const data: any = {
+            name: this.name,
+            father: id
+          }
+          this.dataApi.createFile(data).subscribe(
+            res => {
+              this.toastr.Success("File created");
+              this.ngOnInit();
+            },
+            err => console.log(err)
+          );
+          this.name = "";
+          }
+        }
+      )
+    }else{
+      this.toastr.Info("Please select a folder");
+    }
+  }
 
+  rename(){
+    if(this.current != null){
+      let id:number = parseInt(this.current.name.substring(this.current.name.indexOf("-")+1,this.current.name.length));
+      let name = this.current.name;
+      if(name.substring(0,name.indexOf("-")) === '/'){
+        this.toastr.Info("You can't rename the root folder");
+      }else{
+        const dialogRef = this.dialog.open(ModComponent,{ 
+          width: '250px',
+          data: {message:'New name', name:this.name}
+        });
+        dialogRef.afterClosed().subscribe(
+          res => {
+            if(res !== undefined){
+              this.name = res;
+              const data = {
+                id: id,
+                name: this.name
+              }
+              if(this.current.type === 'folder'){
+                this.dataApi.renameFolder(data).subscribe(
+                  res => {
+                    this.toastr.Success("Folder renamed");
+                    this.ngOnInit();
+                  }
+                )
+              }else{
+                this.dataApi.renameFile(data).subscribe(
+                  res => {
+                    this.toastr.Success("File renamed");
+                    this.ngOnInit();
+                  }
+                )
+              }
+            }
+          }
+        )
+      }
+    }else{
+      this.toastr.Info("Please select a folder or a file");
+    }
+  }
+
+  delete(){
+    if(this.current != null){
+      let name = this.current.name;
+      let id:number = parseInt(this.current.name.substring(this.current.name.indexOf("-")+1,this.current.name.length));
+      if(name.substring(0,name.indexOf("-")) === '/'){
+        this.toastr.Info("You can't delete the root folder");
+      }else{
+        if(this.current.type === 'folder'){
+          this.dataApi.deleteFolder(id).subscribe(
+            res => {
+              this.toastr.Success("Folder deleted");
+              this.ngOnInit();
+            }
+          )
+        }else{
+          this.file = null;
+          this.dataApi.deleteFile(id).subscribe(
+            res => {
+              this.toastr.Success("File deleted");
+              this.ngOnInit();
+            }
+          )
+        }
+      }
+    }else
+      this.toastr.Info("Please select a folder or a file");
+  }
+
+  download(){
+    var doc = new jsPDF();
+    doc.text(this.file.content,10,10);
+    doc.save(this.current.name.substring(0,this.current.name.indexOf("-")));
+    this.toastr.Info("Your download will start in a moment");
+    this.file = null;
+  }
+
+  saveContent(){
+    let id:number = parseInt(this.current.name.substring(this.current.name.indexOf("-")+1,this.current.name.length));
+    const data = {
+      id: id,
+      content: this.contentFile
+    }
+    this.dataApi.updateFile(data).subscribe(
+      res => {
+        this.toastr.Success("Succesfully saved");
+        this.ngOnInit();
+        this.file = null;
+      }
+    );
   }
 
 }
