@@ -31,6 +31,14 @@ export class UserService {
     return this.http.post(`${this.URL}/register`,fd);
   }
 
+  public getUserData(username:string){
+    return this.http.get(`${this.URL}/getUser/${username}`);
+  }
+
+  public updateUser(user: any){
+    return this.http.put(`${this.URL}/update`,user);
+  }
+
   activateUser(user: Object){
     return this.http.put(`${this.URL}/activate`,user);
   }
@@ -46,10 +54,6 @@ export class UserService {
         console.log(err);
       }
     ));;
-  }
-
-  public getUserData(username:string){
-    return this.http.get(`${this.URL}/getUser/${username}`);
   }
 
   logout(){
