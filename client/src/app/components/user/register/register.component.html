@@ -1,74 +1,76 @@
-<div class="container py-5 " >
-     <div class="row">
-        <div class="col-md-12">
-            <br>
-            <h2 class="text-center mb-5">Register Form</h2>
-            <div class="row">
-                <div class="col-md-6 mx-auto">
-                    <div class="card border-secondary">
-                        <div class="card-header">
-                            <h3 class="mb-0 my-2">Sign Up</h3>
-                        </div>
-                        <div class="card-body">
-                            <form class="form" role="form" autocomplete="off">
-                                <label for="inputName">Name</label>
-                                <div class="form-row mb-4">
+<div class="container">
+    <div class="row pt-5">
+        <div class="col-md-12  py-5">
+            <h2 class="text-center mb-4 text-white">Register Form</h2>
+                <div class="row">
+                    <div class="col-md-6 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="mb-0 my-2">Sign Up</h3>
+                            </div>
+                            <div class="card-body">
+                                <form class="form" role="form" autocomplete="off">
+                                    <label for="inputName">Name</label>
+                                    <div class="form-row mb-4">
                                     <!-- First name -->
-                                    <div class="col">
-                                    <input type="text" name="firstname" [(ngModel)]="user.nombre" class="form-control" placeholder="First name" required> 
+                                        <div class="col">
+                                            <input type="text" name="firstname" [(ngModel)]="user.nombre" class="form-control" placeholder="First name" required> 
+                                        </div>
+                                        <!-- Second name -->
+                                        <div class="col">
+                                            <input type="text" name="lastname" [(ngModel)]="user.apellido" class="form-control" placeholder="Last name" required>
+                                        </div>
                                     </div>
-                                    <!-- Second name -->
-                                    <div class="col">
-                                    <input type="text" name="lastname" [(ngModel)]="user.apellido" class="form-control" placeholder="Last name" required>
+                                    <!-- Username -->
+                                    <div class="form-row mb-4">
+                                        <div class="col">
+                                            <label for="inputUsername">Username</label>
+                                            <input type="text" class="form-control" name="email" [(ngModel)]="user.username" placeholder="Nickname" required>
+                                        </div>
+                                        <div class="col">
+                                            <label for="inputAddress">Date of birth</label>
+                                            <input type="date" name="bday" [(ngModel)]="user.fecha_nacimiento" class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <!-- Gender -->
-                                <div class="form-group">
-                                    <label for="inputName">Gender</label>
-                                    <br>
-                                    <input input type="radio" name="gender" [(ngModel)]="user.genero" value="M" class="mr-2"> 
-                                    <label for="m" class="mr-2">Male</label>
-                                    <input input type="radio" name="gender" [(ngModel)]="user.genero" value="F" class="mr-2"> 
-                                    <label for="f" class="mr-2">Female</label>
-                                    <input input type="radio" name="gender" [(ngModel)]="user.genero" value="O" class="mr-2"> 
-                                    <label for="f" class="mr-2">Other</label>
-                                </div>
-                                <!-- Username -->
-                                <div class="form-group">
-                                    <label for="inputUsername">Username</label>
-                                    <input type="text" class="form-control" name="email" [(ngModel)]="user.username" placeholder="Nickname" required>
-                                </div>
-                                 <!-- Email -->
-                                <div class="form-group">
-                                    <label for="inputEmail">Email</label>
-                                    <input type="email" class="form-control" name="email" [(ngModel)]="user.correo" placeholder="Email address" required/>
-                                </div>
-                                <!-- Cell phone -->
-                                <div class="form-group">
-                                    <label for="inputPhone">Cell-Phone</label>
-                                    <input type="text" class="form-control" name="phone" [(ngModel)]="user.telefono" placeholder="Phone number">
-                                </div>
-                                <!-- Address -->
-                                <div class="form-group">
-                                    <label for="inputAddress">Home address</label>
-                                    <input type="email" class="form-control" name="address" [(ngModel)]="user.direccion" placeholder="Address" required="">
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputAddress">Date of birth</label>
-                                    <input type="date" name="bday" [(ngModel)]="user.fecha_nacimiento" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="inputAddress">Photo</label>
-                                    <input type="file" name="photo" [(ngModel)]="user.fotografia" class="form-control">
-                                </div>
-                                <div class="form-group text-center">
-                                    <button class="btn btn-dark btn-lg float-" (click)="registerUser()">Register</button>
-                                </div>
-                            </form>
+                                    <!-- Gender -->
+                                    <div class="form-group">
+                                        <label for="inputName">Gender</label>
+                                        <input input type="radio" name="gender" [(ngModel)]="user.genero" value="M" class="mr-2 ml-4"> 
+                                        <label for="m" class="mr-2">Male</label>
+                                        <input input type="radio" name="gender" [(ngModel)]="user.genero" value="F" class="mr-2"> 
+                                        <label for="f" class="mr-2">Female</label>
+                                        <input input type="radio" name="gender" [(ngModel)]="user.genero" value="O" class="mr-2"> 
+                                        <label for="f" class="mr-2">Other</label>
+                                    </div>
+                                    <!-- Email -->
+                                    <div class="form-group">
+                                        <label for="inputEmail">Email</label>
+                                        <input type="email" class="form-control" name="email" [(ngModel)]="user.correo" placeholder="Email address" required/>
+                                    </div>
+                                    <!-- Cell phone -->
+                                    <div class="form-group">
+                                        <label for="inputPhone">Cell-Phone</label>
+                                        <input type="text" class="form-control" name="phone" [(ngModel)]="user.telefono" placeholder="Phone number">
+                                    </div>
+                                    <!-- Address -->
+                                    <div class="form-group">
+                                        <label for="inputAddress">Home address</label>
+                                        <input type="email" class="form-control" name="address" [(ngModel)]="user.direccion" placeholder="Address" required="">
+                                    </div>  
+                                    <div class="form-group">
+                                        <label for="inputAddress">Photo</label>
+                                        <input type="file"  name="photo" [(ngModel)]="user.fotografia" class="d-none" (change)="onPhotoSelected($event)" #photoInput>
+                                        <img [src]="photoSelected || 'assets/img/no-image.png'" class="img-fluid" alt="No image" (click)="photoInput.click()" >
+                                    </div>
+                                    <div class="form-group text-center">
+                                        <button class="btn btn-dark btn-lg float-" (click)="registerUser()">Register</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
+                 </div>
             </div>
         </div>
-    </div>
 </div>
+     
