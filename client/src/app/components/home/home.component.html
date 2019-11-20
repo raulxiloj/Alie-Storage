@@ -1,32 +1,76 @@
-<div class="jumbotron cont">
-    <img src="assets/img/logo.png" width="200" alt="logo not found" class="image">
-    <h2 class="pt-4 text-white-50"> {{data.NOMBRE}} </h2>
-    
-    <div class="container ">
-        <h3 class="text-white-50">{{data.ESLOGAN}}</h3> 
-        <div class="container text-center pt-5">
-          <iframe width="460" height="320" src="https://www.youtube.com/embed/3WANMc8EqPM"></iframe>
+  <!-- Masthead -->
+  <header class="masthead text-white align-left ">
+          <h1 class="mb-5 ml-5">Welcome to the future</h1>
+          
+          <ul class="ml-5">
+            <h3>Benefits:</h3>
+            <li> <h4>Usability and Accesability</h4></li>
+            <li> <h4>Recovery</h4> </li>
+            <li> <h4>Security</h4> </li>
+            <li> <h4>Cost savings</h4> </li>
+            <li> <h4>Easy sharing</h4> </li>
+          </ul>
+          <h2 class="mt-5 ml-5">{{data.ESLOGAN}}</h2>
+  </header>
+
+ <!-- Icons Grid -->
+ <section class="features-icons bg-light text-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+          <div class="features-icons-icon d-flex">
+            <i class="fas fa-cube m-auto"></i>
+          </div>
+          <h3>Mission</h3>
+          <p class="lead mb-0">{{data.MISION}}</p>
         </div>
       </div>
-</div>
-
-<div class="container">
-    <!-- Example row of columns -->
-    <div class="row">
-      <div class="col-md-4 pt-4">
-        <h2>Mission</h2>
-        <p>{{data.MISION}}</p>
+      <div class="col-lg-4">
+        <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+          <div class="features-icons-icon d-flex">
+            <i class="fas fa-cubes m-auto"></i>
+          </div>
+          <h3>Vision</h3>
+          <p class="lead mb-0">{{data.VISION}}</p>
+        </div>
       </div>
-      <div class="col-md-4 pt-4">
-        <h2>Vision</h2>
-        <p>{{data.VISION}}</p>
-      </div>
-      <div class="col-md-4 pt-4">
-        <h2>About me</h2>
-        <p>{{data.ABOUT}}</p>
+      <div class="col-lg-4">
+        <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+          <div class="features-icons-icon d-flex">
+            <i class="fas fa-question m-auto"></i>
+          </div>
+          <h3>About</h3>
+          <p class="lead mb-0">{{data.ABOUT}}</p>
+        </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <hr>
-
-</div> <!-- /container -->
+ <!-- Image Showcases -->
+ <section class="showcase">
+    <div class="container-fluid p-0">
+      <div class="row no-gutters">
+        <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('../../../assets/img/whatIs.png');"></div>
+        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+          <h2>Usability And Accessibility</h2>
+          <p class="lead mb-0">Users can easily drag and drop the files in the cloud storage. It is easy to save all the files and data in the cloud, no technical knowledge is required for this purpose. The stored files can be easily accessed from anywhere in the world with just a few clicks and an internet connection.</p>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-lg-6 text-white showcase-img" style="background-image: url('../../../assets/img/logo.png');"></div>
+        <div class="col-lg-6 my-auto showcase-text">
+          <h2>Easy Sharing</h2>
+          <p class="lead mb-0">Data stored in cloud storage can be easily shared with clients and colleagues in an easy and secure way. You can easily share access to a particular cloud environment or to the complete account with some other user.</p>
+        </div>
+      </div>
+      <div class="row no-gutters">
+        <div class="col-lg-6 order-lg-2 text-white showcase-img text-center "> </div>
+        <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+          <h2>Video</h2>
+          <p class="lead mb-0"></p>
+        </div>
+      </div>
+    </div>
+  </section>
