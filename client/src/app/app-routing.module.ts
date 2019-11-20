@@ -9,6 +9,7 @@ import { ConfirmationComponent } from './components/confirmation/confirmation.co
 import { UserHomeComponent } from './components/user/user-home/user-home.component';
 import { AuthGuard } from './guards/auth.guard';
 import { EditHomeComponent } from './components/admin/edit-home/edit-home.component';
+import { FileSystemComponent } from './components/user/file-system/file-system.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
     path: 'user/Home',
     component: UserHomeComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'user/fileSystem/:id',
+    component: FileSystemComponent
   },
   {
     path: 'admin/editHome',
