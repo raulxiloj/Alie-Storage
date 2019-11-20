@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-
-import { DataApiService } from '../services/data-api.service'
+import { UserService } from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +9,10 @@ export class AuthGuard implements CanActivate {
 
   temp: boolean = false;
 
-  constructor(private dataService: DataApiService, private router: Router){ }
+  constructor(private userService: UserService, private router: Router){ }
 
   canActivate(){
-    if(this.dataService.getToken()){
+    if(this.userService.getToken() != null){
       return true;
     }else{
       this.router.navigate(['user/login']);
