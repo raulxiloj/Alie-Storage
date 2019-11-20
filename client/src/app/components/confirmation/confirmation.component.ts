@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataApiService } from 'src/app/services/data-api.service';
 import { Router } from '@angular/router'
 import { ToastrService } from 'src/app/services/toastr.service';
+import { UserService } from 'src/app/services/user.service';
 
 
 @Component({
@@ -15,14 +16,14 @@ export class ConfirmationComponent implements OnInit {
   password: string;
   user: any = {};
 
-  constructor(private dataApiService: DataApiService, private router:Router, private toastr:ToastrService) { }
+  constructor(private userService: UserService, private router:Router, private toastr:ToastrService) { }
 
   ngOnInit() {
 
   }
 
   activateUser(){
-    this.dataApiService.activateUser(this.user)
+    this.userService.activateUser(this.user)
     .subscribe(
       res => {
         console.log(res);
@@ -30,7 +31,7 @@ export class ConfirmationComponent implements OnInit {
         this.router.navigate(['/']);
       },
       err => {
-        console.log(err.message);
+        this.toastr.Error("Wrong temporal password, please check your email");
       }
     )
   }
