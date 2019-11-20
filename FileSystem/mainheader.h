@@ -90,5 +90,6 @@ QList<Data> getCarpetasArchivos(FILE*,int,int,int);
 int getByteIB(FILE*,int,char,int);
 int getPadre(FILE*,int,int);
 char getType(FILE *stream, int pos, int inicioSuper);
+QString getNombreF(int n);
 
 #endif // MAINHEADER_H

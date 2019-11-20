@@ -114,6 +114,11 @@ int main()
 }
 
 void syncroniceData(QString id){
+    tcp_client c;
+    string host = "127.0.0.1";
+    //connect to host
+    c.conn(host , 3000);
+
     NodoMount *n = lista->getNodo(id);
     if(n != nullptr){
         int index = disco.buscarParticion_P_E(n->direccion,n->nombre);
@@ -125,36 +130,66 @@ void syncroniceData(QString id){
             fseek(fp,masterboot.mbr_partition[index].part_start,SEEK_SET);
             inicioSuper = masterboot.mbr_partition[index].part_start;
             QList<Usuario> usuarios = getUsuarios(n->direccion,inicioSuper);
-            for (int i = 0; i < usuarios.count(); i++) {
-                cout << usuarios.at(i).username << endl;
-            }
             QList<Data> aux = getCarpetasArchivos(fp,inicioSuper,1,0);
-            for (int j=0; j < aux.count(); j++) {
-                cout << data.at(j).nombre.toStdString() << " Padre: " << data.at(j).padre  << " Actual: "<< data.at(j).actual << endl;
+            usuarios.removeAt(0);
+            for (int i = 0; i < usuarios.length(); i++) {
+                string info  = "{\"username\":\""+string(usuarios.at(i).username)+"\",\"clave\":\""+string(usuarios.at(i).password)+"\"}";
+                int length = static_cast<int>(info.length());
+                c.send_data("POST /user/registerConsole HTTP/1.1\r\nHost: 127.0.0.1:3000\r\nContent-Type: application/json\r\nContent-Length: "+to_string(length)+"\r\n\r\n"+info);
+                //receive and echo reply
+                cout<<"----------------------------\n\n";
+                cout<<c.receive(1024);
+                cout<<"\n\n----------------------------\n\n";
+                for (int j = 0; j < data.count(); j++) {
+                    if(data.at(j).tipo == 'C'){
+                        string info2 = "{\"username\":\""+string(usuarios.at(i).username)+"\",\"nombre\":\""+data.at(j).nombre.toStdString().c_str()+"\",\"tipo\":\"C\",\"padre\":\""+getNombreF(data.at(j).padre).toStdString().c_str()+"\"}";
+                        int length2 = static_cast<int>(info2.length());
+                        c.send_data("POST /user/syncronice HTTP/1.1\r\nHost: 127.0.0.1:3000\r\nContent-Type: application/json\r\nContent-Length: "+to_string(length2)+"\r\n\r\n"+info2);
+                        //receive and echo reply
+                        cout<<"----------------------------\n\n";
+                        cout<<c.receive(1024);
+                        cout<<"\n\n----------------------------\n\n";
+                    }else{
+                        string info2 = "{\"username\":\""+string(usuarios.at(i).username)+"\",\"nombre\":\""+data.at(j).nombre.toStdString().c_str()+"\",\"tipo\":\"A\",\"padre\":\""+getNombreF(data.at(j).padre).toStdString().c_str()+"\"}";
+                        int length2 = static_cast<int>(info2.length());
+                        c.send_data("POST /user/syncronice HTTP/1.1\r\nHost: 127.0.0.1:3000\r\nContent-Type: application/json\r\nContent-Length: "+to_string(length2)+"\r\n\r\n"+info2);
+                        //receive and echo reply
+                        cout<<"----------------------------\n\n";
+                        cout<<c.receive(1024);
+                        cout<<"\n\n----------------------------\n\n";
+                    }
+
+                }
             }
             data.clear();
-        }else{//Logica
-
         }
     }else
         cout << "ERROR: No se encuentra ninguna particion montada con ese id" << endl;
 
     /*
     tcp_client c;
-    string host = "127.0.0.1";
-    //connect to host
-    c.conn(host , 3000);
+
+
     //send some data
     //c.send_data("GET /registro HTTP/1.1\r\n\r\n");
     string data = "{\"username\":\"saxl\",\"clave\":\"123\"}";
-    int length = static_cast<int>(data.length());
+
     cout << length << endl;
-    c.send_data("POST /registro HTTP/1.1\r\nHost: 127.0.0.1:3000\r\nContent-Type: application/json\r\nContent-Length: "+to_string(length)+"\r\n\r\n"+data);
+
     //receive and echo reply
     cout<<"----------------------------\n\n";
     cout<<c.receive(1024);
     cout<<"\n\n----------------------------\n\n";
     */
+}
+
+QString getNombreF(int n){
+    for(int i = 0; i < data.length(); i++){
+        if(data.at(i).actual == n){
+            return data.at(i).nombre;
+        }
+    }
+    return "";
 }
 
 /*
@@ -5126,7 +5161,7 @@ int buscarContentLibre(FILE* stream,int numInodo,InodoTable &inodo,BloqueCarpeta
     return libre;
 }
 
-/* ----- SYNCRONICE DATA ----- */
+/* ------------------------- SYNCRONICE DATA ------------------------- */
 QList<Usuario> getUsuarios(QString direccion,int inicioSuper){
     QList<Usuario> users;
 
@@ -5221,7 +5256,8 @@ QList<Data> getCarpetasArchivos(FILE* stream, int inicioSuper, int id, int num){
                             data.append(*d);
                             getCarpetasArchivos(stream,inicioSuper,id,getByteIB(stream,c.b_content[j].b_inodo,'1',inicioSuper));
                         }else{
-
+                            Data *d = new Data(aux,p,c.b_content[j].b_inodo,c.b_content[j].b_name);
+                            data.append(*d);
                         }
 
                     }
