@@ -1,1 +1,137 @@
-<p>profile works!</p>
+<div class="container pt-5">
+  <div class="row flex-lg-nowrap pt-5">
+    <div class="col">
+      <div class="row">
+        <div class="col mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="e-profile">
+                <div class="row">
+                  <div class="col-6 col-sm-auto mb-3">
+                    <div class="mx-auto" style="width: 140px;">
+                      <img [src]="'http://localhost:3000/'+userData.photo"  width="140" alt="">
+                    </div>
+                  </div>
+                  <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                    <div class="text-center text-sm-left mb-2 mb-sm-0">
+                      <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{userData.firstname}} {{userData.lastname}}</h4>
+                      <p class="mb-0">@{{userData.username}}</p>
+                      <!--  
+                      <div class="mt-2">
+
+                          <button class="btn btn-dark" type="button">
+                            <i class="fa fa-fw fa-camera"></i>
+                            <span>Change Photo</span>
+                          </button>
+                      </div>
+                      -->
+                    </div>
+                      <div class="text-center text-sm-right">
+                        <span class="badge badge-secondary">User</span>
+                        <div class="text-muted"><small>Joined {{userData.register_date}}</small></div>
+                      </div>
+                  </div>
+                </div>
+                <div class="tab-content pt-3">
+                  <div class="tab-pane active">
+                    <form class="form" name="registerForm">
+                      <div class="row">
+                        <div class="col">
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>First Name</label>
+                                <input class="form-control" type="text" name="name" value={{userData.firstname}} [(ngModel)]="newData.firstname">
+                              </div>
+                            </div>
+                            <div class="col">
+                              <div class="form-group">
+                                <label>Last Name</label>
+                                <input class="form-control" type="text" name="username" value={{userData.lastname}} [(ngModel)]="newData.lastname">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <label>Email</label>
+                                  <input class="form-control" type="text" value={{userData.email}} name="email" [(ngModel)]="newData.email">
+                                </div>
+                              </div>
+                              <div class="col">
+                                  <div class="form-group">
+                                    <label>Phone number</label>
+                                    <input class="form-control" rows="5" value={{userData.phone}} name="phone" [(ngModel)]="newData.phone">
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row">
+                            <div class="col mb-3">
+                              <div class="form-group">
+                                <label>Home address</label>
+                                <input class="form-control" rows="5" value={{userData.address}} name="address" [(ngModel)]="newData.address">
+                              </div>
+                            </div>
+                            
+                          </div>
+                       </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12 col-sm-6 mb-3">
+                          <div class="mb-2"><b>Change Password</b></div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>Current Password</label>
+                                <div class="row" ng-controller="prueba" ng-app="demoApp">
+                                  <div class="col">
+                                      <input class="form-control" type="password" value={{userData.password}} id="myPassword" 
+                                      name="currentPass" 
+                                      [(ngModel)]="newData.password"
+                                      > 
+                                  </div>
+                                  
+                                  <div class="col">
+                                      <button class="btn btn-light" (click)="showPassword()"><i class="fas fa-eye"></i></button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!--
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>New Password</label>
+                                <input class="form-control" type="password" placeholder="••••••" id="newPass" name="newPass" [(ngModel)]="newData.new">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col">
+                              <div class="form-group">
+                                <label>Confirm <span class="d-none d-xl-inline">Password</span></label>
+                                <input class="form-control" type="password" id="confirmPass" placeholder="••••••"></div>
+                            </div>
+                          </div>
+                        -->
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col d-flex justify-content-end">
+                          <button class="btn btn-dark" (click)="saveChanges()">Save Changes</button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
