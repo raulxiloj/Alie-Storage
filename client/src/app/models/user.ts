@@ -6,7 +6,7 @@ export interface User{
     clave?: string;
     correo?: string;
     telefono?: number;
-    fotografia?: string;
+    fotografia?: File;
     genero?: string;
     fecha_nacimiento?: string;
     direccion?: string;
