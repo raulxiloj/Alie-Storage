@@ -24,7 +24,7 @@
                         </div>
                       </div>
                         <div class="text-center text-sm-right">
-                          <span class="badge badge-secondary">administrator</span>
+                          <span class="badge badge-secondary">Administrator</span>
                         </div>
                     </div>
                   </div>
@@ -45,7 +45,7 @@
                                 <div class="col">
                                   <div class="form-group">
                                     <label>Eslogan</label>
-                                    <input class="form-control" type="text" value={{data.ESLOGAN}} [(ngModel)]="data.ESLOGAN">
+                                    <input class="form-control" type="text" value={{data.ESLOGAN}} name="eslogan" [(ngModel)]="data.ESLOGAN">
                                   </div>
                                 </div>
                             </div>
@@ -53,15 +53,15 @@
                               <div class="col mb-3">
                                 <div class="form-group">
                                   <label>Mission</label>
-                                  <textarea class="form-control" rows="3" value={{data.MISION}} [(ngModel)]="data.MISION"></textarea>
+                                  <textarea class="form-control" rows="3" value={{data.MISION}} name="mision" [(ngModel)]="data.MISION"></textarea>
                                 </div>
                                 <div class="form-group">
                                     <label>Vision</label>
-                                    <textarea class="form-control" rows="3" value={{data.VISION}} [(ngModel)]="data.VISION"></textarea>
+                                    <textarea class="form-control" rows="3" value={{data.VISION}} name="vision" [(ngModel)]="data.VISION"></textarea>
                                   </div>
                                   <div class="form-group">
                                     <label>About</label>
-                                    <textarea class="form-control" rows="3" value={{data.ABOUT}} [(ngModel)]="data.ABOUT"></textarea>
+                                    <textarea class="form-control" rows="3" value={{data.ABOUT}} name="about" [(ngModel)]="data.ABOUT"></textarea>
                                   </div>
                               </div>
                             </div>
