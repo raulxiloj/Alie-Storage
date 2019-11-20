@@ -44,7 +44,7 @@ CREATE TABLE carpeta(
     nombre VARCHAR2(60) NOT NULL,
     padre INTEGER,
     fs INTEGER,
-    FOREIGN KEY (padre) REFERENCES carpeta(id),
+    FOREIGN KEY (padre) REFERENCES carpeta(id) ON DELETE CASCADE,
     FOREIGN KEY (fs) REFERENCES sistema_archivos(id)
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE archivo(
     nombre VARCHAR2(50),
     contenido VARCHAR2(400),
     carpeta INTEGER,
-    FOREIGN KEY (carpeta) REFERENCES carpeta(id)
+    FOREIGN KEY (carpeta) REFERENCES carpeta(id) ON DELETE CASCADE
 );
 
 CREATE TABLE homePage(
@@ -70,6 +70,8 @@ CREATE SEQUENCE user_seq START WITH 1;
 CREATE SEQUENCE disk_seq START WITH 500;
 CREATE SEQUENCE part_seq START WITH 100;
 CREATE SEQUENCE fs_seq   START WITH 1;
+CREATE SEQUENCE folder_seq START WITH 1;
+CREATE SEQUENCE file_seq START WITH 1;
 
 CREATE TRIGGER user_trigger
 BEFORE INSERT ON usuario
@@ -89,7 +91,7 @@ BEGIN
     FROM dual;
 END;
 
-CREATE OR REPLACE TRIGGER  part_trigger
+CREATE TRIGGER  part_trigger
 BEFORE INSERT ON particion
 FOR EACH ROW
 BEGIN 
@@ -98,7 +100,7 @@ BEGIN
     FROM dual;
 END;
 
-CREATE OR REPLACE TRIGGER  fs_trigger
+CREATE TRIGGER  fs_trigger
 BEFORE INSERT ON sistema_archivos
 FOR EACH ROW
 BEGIN 
@@ -107,8 +109,34 @@ BEGIN
     FROM dual;
 END;
 
+CREATE TRIGGER folder_trigger
+BEFORE INSERT ON carpeta
+FOR EACH ROW
+BEGIN 
+    SELECT folder_seq.NEXTVAL
+    INTO :new.id
+    FROM dual;
+END;
+
+CREATE TRIGGER file_trigger
+BEFORE INSERT ON archivo
+FOR EACH ROW
+BEGIN
+    SELECT file_seq.NEXTVAL
+    INTO :new.id
+    FROM dual;
+END;
+
 INSERT INTO homePage(nombre,eslogan,mision,vision,about) 
-VALUES('ALIE STORAGE','Need more space? Cloud storage is the solution, is the future','Give you a place to storage your folders, files and more information where you can access anywhere you are.','Continue supporting people around the world with their information, innovating our services daily.','Alie Storage makes it posibble to store practically limitless amount of data in a simple way. It is commonly used for data archiving and backup.');
+VALUES('ALIE STORAGE','Need more space? Cloud storage is the solution','Give you a place to storage your folders, files and more information where you can access anywhere you are.','Continue supporting people around the world with their information, innovating our services daily.','Alie Storage makes it posibble to store practically limitless amount of data in a simple way. It is commonly used for data archiving and backup.');
+
+INSERT INTO usuario(username,clave,tipo) VALUES ('admin','admin',2);
+
+SELECT * FROM usuario WHERE username = 'admin';
+SELECT *
+                     FROM usuario
+                     WHERE username = 'admin'
+
 
 -- DROP TABLES
 DROP TABLE archivo;
@@ -122,8 +150,16 @@ DROP SEQUENCE user_seq;
 DROP SEQUENCE disk_seq;
 DROP SEQUENCE part_seq;
 DROP SEQUENCE fs_seq;
+DROP SEQUENCE folder_seq;
+DROP SEQUENCE file_seq;
 -- DROP TRIGGERS
 DROP TRIGGER user_trigger;
 DROP TRIGGER disk_trigger;
 DROP TRIGGER part_trigger;
 DROP TRIGGER fs_trigger;
+-- Clean tables
+DELETE FROM sistema_archivos;
+DELETE FROM particion;
+DELETE FROM disco;
+DELETE FROM usuario;
+
