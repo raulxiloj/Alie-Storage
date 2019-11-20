@@ -1,11 +1,14 @@
 import express, { Application } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-
-const database = require('./routes/database');
+import path from 'path';
 
 import indexRoutes from './routes/indexRoutes';
-import registerRoutes from './routes/registerRoutes';
+import userRoutes from './routes/userRoutes';
+import adminRoutes from './routes/adminRoutes';
+import fsRoutes from './routes/fsRoutes';
+
+const database = require('./routes/database');
 
 class Server{
 
@@ -16,18 +19,20 @@ class Server{
         this.config();
         this.routes();
     }
-
+    
     config(): void{
         this.app.set('port', 3000);
-        this.app.use(morgan('dev'));
+        this.app.use(morgan('dev'));//middleware
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.urlencoded({extended:false}));
+        this.app.use('/uploads',express.static(path.resolve('uploads')))
     }
 
     routes(): void{
-        this.app.use('/',indexRoutes);
-        this.app.use('/registro',registerRoutes);
+        this.app.use('/user',userRoutes);
+        this.app.use('/admin',adminRoutes);
+        this.app.use('/fs',fsRoutes);
     }
 
     start(): void{
@@ -36,7 +41,10 @@ class Server{
             console.log('Server on port ', this.app.get('port'));
         });
     }
+
 }
 
 const server = new Server();
 server.start();
+
+
