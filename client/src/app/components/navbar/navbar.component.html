@@ -1,25 +1,28 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top">
     <a class="navbar-brand" routerLink="/">
       <img src="assets/img/cloud_storage.png" width="45" height="45" alt="">
     </a>
-    <a class="navbar-brand" routerLink="/">ALIE STORAGE</a>
+    <a class="navbar-brand text-dark" routerLink="/">{{data.NOMBRE}}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/user/register"> <i class="fas fa-user-plus"></i> Register</a>
+          <a class="nav-link text-dark" routerLink="/user/register" *ngIf="!isLogged"> <i class="fas fa-user-plus"></i> Register</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/user/profile"> <i class="fas fa-user"></i> Profile</a>
+          <a class="nav-link text-dark" routerLink="/user/Home" *ngIf="isLogged && isUser"> <i class="fas fa-compact-disc"></i> Disk</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" routerLink="/user/login">Login</a>
+          <a class="nav-link text-dark" routerLink="/user/profile" *ngIf="isLogged && isUser"> <i class="fas fa-user "></i> Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" routerLink="/user/login" *ngIf="!isLogged" ><i class="fas fa-sign-in-alt text-dark"></i> Login</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Logout</a>
-          </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" (click)="logout()" *ngIf="isLogged"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
       </ul>
     </div>
 </nav>
