@@ -4,13 +4,19 @@
         <br>
         <!-- Profile widget -->
         <div class="bg-white shadow rounded overflow-hidden">
-            <div class="px-4 pt-0 pb-4 bg-dark">
+            <div class="px-4 pt-0 pb-4 bg-light">
                 <div class="media align-items-end profile-header">
-                    <div class="profile mr-3"><img src="https://es.zenit.org/wp-content/uploads/2018/05/no-image-icon.png" alt="..." width="130" class="rounded mb-2 img-thumbnail"><a routerLink="/user/profile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
-                        <div class="media-body mb-5 text-white">
-                            <h4 class="mt-0 mb-0">{{userData.firstname}} {{userData.lastname}}</h4>
-                            <p class="small mb-4"> <i class="fa fa-address-card" aria-hidden="true"></i> {{userData.username}}</p>
-                        </div>
+                    <div class="profile mr-3" *ngIf="userData.photo!=null; else elseBlock">
+                        <img [src]="'http://localhost:3000/'+userData.photo" alt="..." width="130" class="rounded mb-2 img-thumbnail">
+                        <a routerLink="/user/profile" class="btn btn-dark btn-sm btn-block">Edit profile</a>
+                    </div>
+                    <ng-template #elseBlock >
+                        <img src="assets/img/no-image.png" alt="..." width="130" class="rounded mb-2 img-thumbnail">
+                    </ng-template>
+                    <div class="media-body mb-5">
+                        <h4 class="mt-0 mb-0">{{userData.firstname}} {{userData.lastname}}</h4>
+                        <p class="small mb-4"> @{{userData.username}}</p>
+                    </div>
                 </div>
             </div>
             
@@ -18,12 +24,13 @@
                 <div class="d-flex align-items-center justify-content-between mb-3">
                     <h5 class="mb-0">Disco</h5><a href="#" class="btn btn-link text-muted">disk name</a>
                 </div>
-                <!-- DIRECTORY -->
+                <!-- Partitions -->
                 <div class="row text-center">
-                    <div class="col-lg-6 mb-2 pr-lg-1"><img src="assets/img/partition.png" alt=""  width="240"></div>
-                    <div class="col-lg-6 mb-2 pl-lg-1"><img src="assets/img/partition.png" alt="" class="img-fluid rounded shadow-sm" width="240"></div>
+                    <div class="col-lg-6 mb-2 pr-lg-1" *ngFor="let p of userData.partitions">
+                        <a routerLink='/user/fileSystem/{{p.ID}}'><img src="assets/img/partition.png" alt=""  width="240" ></a>
+                        <p>{{p.NOMBRE}}</p>
+                    </div>
                 </div>
-
             </div>
         </div><!-- End profile widget -->
     </div>

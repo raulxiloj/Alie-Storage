@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataApiService } from 'src/app/services/data-api.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-user-home',
@@ -10,24 +10,10 @@ export class UserHomeComponent implements OnInit {
 
   userData: any = { }
 
-  folders: any = {
-    type: 'dir',
-    name: 'app',
-    children: [
-      {
-        type: 'file',
-        name: 'index.html'
-      },
-      {
-        type: 'dir',
-        name: 'script.js'
-      }
-    ]
-  }
-  constructor(private dataApi: DataApiService) { }
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
-    this.dataApi.getUserData(this.dataApi.getUser()).subscribe(
+    this.userService.getUserData(this.userService.getUser()).subscribe(
       res => {
         this.userData = res;
       },
@@ -36,7 +22,4 @@ export class UserHomeComponent implements OnInit {
     
   }
 
-  displayJsonTree(){
-    
-  }
 }
