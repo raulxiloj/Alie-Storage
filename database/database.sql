@@ -132,12 +132,6 @@ VALUES('ALIE STORAGE','Need more space? Cloud storage is the solution','Give you
 
 INSERT INTO usuario(username,clave,tipo) VALUES ('admin','admin',2);
 
-SELECT * FROM usuario WHERE username = 'admin';
-SELECT *
-                     FROM usuario
-                     WHERE username = 'admin'
-
-
 -- DROP TABLES
 DROP TABLE archivo;
 DROP TABLE carpeta;
